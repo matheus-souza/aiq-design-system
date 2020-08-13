@@ -181,7 +181,7 @@ export const Input: React.FC<Props> = ({
         </LabelStyled>
 
         {errorForm ? (
-          <Text color='darkerGrey' fontSize='medium'>
+          <Text color='darkerGrey' fontSize='small'>
             {errorMessage}
           </Text>
         ) : (
@@ -209,7 +209,7 @@ export const Input: React.FC<Props> = ({
         </LabelStyled>
 
         {errorForm ? (
-          <Text color='darkerGrey' fontSize='medium'>
+          <Text color='darkerGrey' fontSize='small'>
             {errorMessage}
           </Text>
         ) : (
@@ -235,7 +235,7 @@ export const Input: React.FC<Props> = ({
       </LabelStyled>
 
       {errorForm ? (
-        <Text color='darkerGrey' fontSize='medium'>
+        <Text color='darkerGrey' fontSize='small'>
           {errorMessage}
         </Text>
       ) : (
