@@ -1,4 +1,4 @@
-import React, { InputHTMLAttributes } from 'react'
+import React, { memo, InputHTMLAttributes } from 'react'
 import PropTypes from 'prop-types'
 
 import { InputOutlined } from './InputOutlined'
@@ -23,51 +23,55 @@ export interface Props extends InputHTMLAttributes<HTMLInputElement> {
   maxWidth?: any
 }
 
-export const Input: React.FC<Props> = ({
-  name,
-  inputRef,
-  label,
-  errorForm,
-  type = 'text',
-  errorMessage,
-  sufix,
-  prefix,
-  value,
-  variant,
-  placeholder,
-  ...props
-}) => {
-  if (variant === 'outlined') {
+export const Input: React.FC<Props> = memo(
+  ({
+    name,
+    inputRef,
+    label,
+    errorForm,
+    type = 'text',
+    errorMessage,
+    sufix,
+    prefix,
+    value,
+    variant,
+    placeholder,
+    ...props
+  }) => {
+    if (variant === 'outlined') {
+      return (
+        <InputOutlined
+          name={name}
+          inputRef={inputRef}
+          label={label}
+          errorForm={errorForm}
+          type={type}
+          errorMessage={errorMessage}
+          sufix={sufix}
+          value={value}
+          {...props}
+        />
+      )
+    }
+
     return (
-      <InputOutlined
+      <InputNeutral
         name={name}
         inputRef={inputRef}
-        label={label}
         errorForm={errorForm}
         type={type}
         errorMessage={errorMessage}
         sufix={sufix}
+        prefix={prefix}
         value={value}
+        placeholder={placeholder}
         {...props}
       />
     )
   }
+)
 
-  return (
-    <InputNeutral
-      name={name}
-      inputRef={inputRef}
-      errorForm={errorForm}
-      type={type}
-      errorMessage={errorMessage}
-      sufix={sufix}
-      prefix={prefix}
-      value={value}
-      placeholder={placeholder}
-      {...props}
-    />
-  )
-}
+Input.displayName = 'Input'
 
 Input.propTypes = {
   name: PropTypes.string,
