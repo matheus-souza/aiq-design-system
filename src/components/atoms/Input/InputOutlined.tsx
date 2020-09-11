@@ -1,4 +1,4 @@
-import React, { useState, InputHTMLAttributes } from 'react'
+import React, { memo, useState, useCallback, InputHTMLAttributes } from 'react'
 import PropTypes from 'prop-types'
 import { MdVisibility, MdVisibilityOff } from 'react-icons/md'
 
@@ -152,103 +152,116 @@ const LabelStyled = styled.label<Props>`
   }
 `
 
-export const InputOutlined: React.FC<Props> = ({
-  name,
-  inputRef,
-  label,
-  errorForm,
-  type = 'text',
-  errorMessage,
-  sufix,
-  value,
-  backgroundColor,
-  maxWidth,
-  marginRight,
-  marginLeft,
-
-  ...props
-}) => {
-  const [showPassword, setShowPassword] = useState(false)
-
-  const styledContainer = {
+export const InputOutlined: React.FC<Props> = memo(
+  ({
+    name,
+    inputRef,
+    label,
+    errorForm,
+    type = 'text',
+    errorMessage,
+    sufix,
+    value,
     backgroundColor,
     maxWidth,
     marginRight,
-    marginLeft
-  }
+    marginLeft,
 
-  if (type === 'password') {
-    return (
-      <Container {...styledContainer} {...props}>
-        <LabelStyled errorForm={errorForm}>
-          <input
-            {...props}
-            placeholder=' '
-            type={showPassword ? 'text' : 'password'}
-            ref={inputRef}
-            name={name}
-          />
-          <Text>{label}</Text>
+    ...props
+  }) => {
+    const [passwordVisible, setPasswordVisible] = useState(false)
 
-          <Button
-            palette='primary'
-            mr={5}
-            onClick={() => setShowPassword(!showPassword)}
-          >
-            {showPassword ? (
-              <MdVisibilityOff size={22} />
-            ) : (
-              <MdVisibility size={22} />
-            )}
-          </Button>
-        </LabelStyled>
+    const styledContainer = {
+      backgroundColor,
+      maxWidth,
+      marginRight,
+      marginLeft
+    }
 
-        {errorForm && <InputErrorMessage errorMessage={errorMessage} />}
-      </Container>
+    const handleShowPassword = useCallback(
+      e => {
+        e.preventDefault()
+        setPasswordVisible(!passwordVisible)
+      },
+      [passwordVisible]
     )
-  }
 
-  if (sufix) {
+    if (type === 'password') {
+      return (
+        <Container {...styledContainer} {...props}>
+          <LabelStyled errorForm={errorForm}>
+            <input
+              {...props}
+              placeholder=' '
+              type={passwordVisible ? 'text' : 'password'}
+              ref={inputRef}
+              name={name}
+            />
+            <Text>{label}</Text>
+
+            <Button
+              palette='primary'
+              mr={5}
+              onClick={handleShowPassword}
+              type='button'
+            >
+              {passwordVisible ? (
+                <MdVisibilityOff size={22} />
+              ) : (
+                <MdVisibility size={22} />
+              )}
+            </Button>
+          </LabelStyled>
+
+          {errorForm && <InputErrorMessage errorMessage={errorMessage} />}
+        </Container>
+      )
+    }
+
+    if (sufix) {
+      return (
+        <Container {...styledContainer} {...props}>
+          <LabelStyled errorForm={errorForm}>
+            <input
+              {...props}
+              placeholder=' '
+              type={type}
+              value={value}
+              ref={inputRef}
+              name={name}
+            />
+            <Text>{label}</Text>
+
+            {sufix}
+          </LabelStyled>
+
+          {errorForm && <InputErrorMessage errorMessage={errorMessage} />}
+        </Container>
+      )
+    }
+
     return (
       <Container {...styledContainer} {...props}>
         <LabelStyled errorForm={errorForm}>
           <input
             {...props}
-            placeholder=' '
-            type={type}
             value={value}
-            ref={inputRef}
+            placeholder=' '
             name={name}
+            type={type}
+            ref={inputRef}
+            autoComplete='off'
           />
           <Text>{label}</Text>
-
-          {sufix}
         </LabelStyled>
 
         {errorForm && <InputErrorMessage errorMessage={errorMessage} />}
       </Container>
     )
   }
+)
 
-  return (
-    <Container {...styledContainer} {...props}>
-      <LabelStyled errorForm={errorForm}>
-        <input
-          {...props}
-          value={value}
-          placeholder=' '
-          name={name}
-          type={type}
-          ref={inputRef}
-          autoComplete='off'
-        />
-        <Text>{label}</Text>
-      </LabelStyled>
-
-      {errorForm && <InputErrorMessage errorMessage={errorMessage} />}
-    </Container>
-  )
-}
+InputOutlined.displayName = 'InputOutlined'
 
 InputOutlined.propTypes = {
   name: PropTypes.string,

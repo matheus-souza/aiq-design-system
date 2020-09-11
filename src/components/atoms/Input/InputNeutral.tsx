@@ -1,4 +1,4 @@
-import React, { useState, InputHTMLAttributes } from 'react'
+import React, { memo, useState, InputHTMLAttributes, useCallback } from 'react'
 import PropTypes from 'prop-types'
 import { MdVisibility, MdVisibilityOff } from 'react-icons/md'
 
@@ -100,128 +100,141 @@ const Input: React.FC<Props> = ({ inputRef, value, ...props }) => {
   return <InputStyled value={value} ref={inputRef} name={name} {...props} />
 }
 
-export const InputNeutral: React.FC<Props> = ({
-  name,
-  inputRef,
-  errorForm,
-  errorMessage,
-  type = 'text',
-  sufix,
-  prefix,
-  value,
-  placeholder,
-  ...props
-}) => {
-  const [inputSelected, setInputSelected] = useState(false)
-  const [passwordVisible, setPasswordVisible] = useState(false)
+export const InputNeutral: React.FC<Props> = memo(
+  ({
+    name,
+    inputRef,
+    errorForm,
+    errorMessage,
+    type = 'text',
+    sufix,
+    prefix,
+    value,
+    placeholder,
+    ...props
+  }) => {
+    const [inputSelected, setInputSelected] = useState(false)
+    const [passwordVisible, setPasswordVisible] = useState(false)
 
-  const { backgroundColor, border, width, maxWidth } = props
-  const boxStyled = {
-    backgroundColor,
-    border,
-    width,
-    maxWidth
-  }
+    const { backgroundColor, border, width, maxWidth } = props
+    const boxStyled = {
+      backgroundColor,
+      border,
+      width,
+      maxWidth
+    }
 
-  if (sufix) {
-    return (
-      <Flex flexDirection='column'>
-        <ContainerSufix
-          {...boxStyled}
-          inputSelected={inputSelected}
-          onClick={() => setInputSelected(true)}
-          onBlur={() => setInputSelected(false)}
-        >
-          <InputSufixed
-            ref={inputRef}
-            placeholder={placeholder}
-            type={type}
-            value={value}
-            {...props}
-          />
-          {sufix}
-        </ContainerSufix>
-
-        {errorForm && <InputErrorMessage errorMessage={errorMessage} />}
-      </Flex>
+    const handleShowPassword = useCallback(
+      e => {
+        e.preventDefault()
+        setPasswordVisible(!passwordVisible)
+      },
+      [passwordVisible]
     )
-  }
 
-  if (prefix) {
-    return (
-      <Flex>
-        <ContainerSufix
-          {...boxStyled}
-          inputSelected={inputSelected}
-          onClick={() => setInputSelected(true)}
-          onBlur={() => setInputSelected(false)}
-        >
-          {prefix}
-          <InputPrefixed
-            ref={inputRef}
-            placeholder={placeholder}
-            type={type}
-            value={value}
-            {...props}
-          />
-        </ContainerSufix>
-
-        {errorForm && <InputErrorMessage errorMessage={errorMessage} />}
-      </Flex>
-    )
-  }
-
-  if (type === 'password') {
-    return (
-      <Flex flexDirection='column'>
-        <ContainerSufix
-          {...boxStyled}
-          inputSelected={inputSelected}
-          onClick={() => setInputSelected(true)}
-          onBlur={() => setInputSelected(false)}
-        >
-          <InputSufixed
-            ref={inputRef}
-            placeholder={placeholder}
-            type={passwordVisible ? 'text' : 'password'}
-            value={value}
-          />
-          <Button
-            palette='primary'
-            mr={5}
-            onClick={() => setPasswordVisible(!passwordVisible)}
+    if (sufix) {
+      return (
+        <Flex flexDirection='column'>
+          <ContainerSufix
+            {...boxStyled}
+            inputSelected={inputSelected}
+            onClick={() => setInputSelected(true)}
+            onBlur={() => setInputSelected(false)}
           >
-            {passwordVisible ? (
-              <MdVisibilityOff size={22} />
-            ) : (
-              <MdVisibility size={22} />
-            )}
-          </Button>
-        </ContainerSufix>
+            <InputSufixed
+              ref={inputRef}
+              placeholder={placeholder}
+              type={type}
+              value={value}
+              {...props}
+            />
+            {sufix}
+          </ContainerSufix>
+
+          {errorForm && <InputErrorMessage errorMessage={errorMessage} />}
+        </Flex>
+      )
+    }
+
+    if (prefix) {
+      return (
+        <Flex>
+          <ContainerSufix
+            {...boxStyled}
+            inputSelected={inputSelected}
+            onClick={() => setInputSelected(true)}
+            onBlur={() => setInputSelected(false)}
+          >
+            {prefix}
+            <InputPrefixed
+              ref={inputRef}
+              placeholder={placeholder}
+              type={type}
+              value={value}
+              {...props}
+            />
+          </ContainerSufix>
+
+          {errorForm && <InputErrorMessage errorMessage={errorMessage} />}
+        </Flex>
+      )
+    }
+
+    if (type === 'password') {
+      return (
+        <Flex flexDirection='column'>
+          <ContainerSufix
+            {...boxStyled}
+            inputSelected={inputSelected}
+            onClick={() => setInputSelected(true)}
+            onBlur={() => setInputSelected(false)}
+          >
+            <InputSufixed
+              ref={inputRef}
+              placeholder={placeholder}
+              type={passwordVisible ? 'text' : 'password'}
+              value={value}
+            />
+            <Button
+              palette='primary'
+              mr={5}
+              onClick={handleShowPassword}
+              type='button'
+            >
+              {passwordVisible ? (
+                <MdVisibilityOff size={22} />
+              ) : (
+                <MdVisibility size={22} />
+              )}
+            </Button>
+          </ContainerSufix>
+
+          {errorForm && <InputErrorMessage errorMessage={errorMessage} />}
+        </Flex>
+      )
+    }
+
+    return (
+      <Flex flexDirection='column'>
+        <Input
+          name={name}
+          inputRef={inputRef}
+          placeholder={placeholder}
+          errorForm={errorForm}
+          type={type}
+          errorMessage={errorMessage}
+          sufix={sufix}
+          value={value}
+          {...props}
+        />
 
         {errorForm && <InputErrorMessage errorMessage={errorMessage} />}
       </Flex>
     )
   }
+)
 
-  return (
-    <Flex flexDirection='column'>
-      <Input
-        name={name}
-        inputRef={inputRef}
-        placeholder={placeholder}
-        errorForm={errorForm}
-        type={type}
-        errorMessage={errorMessage}
-        sufix={sufix}
-        value={value}
-        {...props}
-      />
-
-      {errorForm && <InputErrorMessage errorMessage={errorMessage} />}
-    </Flex>
-  )
-}
+InputNeutral.displayName = 'InputNeutral'
 
 Input.propTypes = {
   inputRef: PropTypes.any,
