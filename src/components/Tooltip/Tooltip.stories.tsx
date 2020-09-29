@@ -34,7 +34,7 @@ export const Variants: React.FC = (): ReactElement => {
       <Tooltip mx={10} variant='right' body="I'm hungry">
         <Text cursor='pointer'>Right</Text>
       </Tooltip>
-      <Tooltip mx={10} variant='right-bottom' body="I'm hungry">
+      <Tooltip mx={10} variant='right-bottom' body={<Flex width='500px'>oi</Flex>}>
         <Text cursor='pointer'>Right-Bottom</Text>
       </Tooltip>
       <Tooltip mx={10} variant='left-bottom' body="I'm hungry">

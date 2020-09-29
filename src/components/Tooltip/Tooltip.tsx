@@ -106,6 +106,7 @@ const TooltipStyled = styled(Box)<Props>`
 
   .tooltip {
     visibility: hidden;
+    display: none;
     opacity: 0;
     white-space: nowrap;
     text-align: center;
@@ -124,6 +125,7 @@ const TooltipStyled = styled(Box)<Props>`
   &:hover .tooltip {
     visibility: visible;
     opacity: 1;
+    display: block;
   }
 `
 
